@@ -1,5 +1,13 @@
 const Event = require("../models/Event");
 
+exports.fetchEvent = async (eventId, next) => {
+  try {
+    const event = await Event.findById(eventId);
+    return event;
+  } catch (error) {
+    next(error);
+  }
+};
 exports.eventListFetch = async (req, res, next) => {
   try {
     const events = await Event.find();
@@ -40,30 +48,25 @@ exports.createEvent = async (req, res, next) => {
 };
 
 exports.updateEvent = async (req, res, next) => {
-  const { eventId } = req.params;
   try {
-    const event = await Event.findByIdAndUpdate(eventId, req.body, {
-      new: true,
-    });
-    if (event) {
-      return res.json(event);
-    } else {
-      next({ status: 404, message: "Event not found!" });
-    }
+    const event = await Event.findByIdAndUpdate(
+      { _id: req.event.id },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
 };
 
 exports.deleteEvent = async (req, res, next) => {
-  const { eventId } = req.params;
   try {
-    const findEvent = await Event.remove({ _id: eventId });
-    if (findEvent) {
-      return res.status(204).end();
-    } else {
-      next({ status: 404, message: "Event not found!" });
-    }
+    await req.event.remove();
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
