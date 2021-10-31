@@ -8,9 +8,11 @@ const {
   deleteEvent,
   fullEvent,
   deleteMany,
+  searchEvent,
 } = require("./controllers");
 
 router.get("/fullybooked", fullEvent);
+router.get("/:eventName", searchEvent);
 router.get("/", eventListFetch);
 router.get("/:eventId", eventById);
 router.post("/", createEvent);

@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
 
 const EventSchema = mongoose.Schema({
-  organizer: String,
+  organizer: {
+    type: String,
+    maxLength: 20,
+    unique: true,
+  },
   name: String,
   email: String,
-  image: String,
-  numOfSeats: Number,
-  bookedSeats: Number,
+  image: { type: String, required: true },
+  numOfSeats: { type: Number, min: 5 },
+  bookedSeats: { type: Number, default: 0 },
   startDate: Date,
   endDate: Date,
 });

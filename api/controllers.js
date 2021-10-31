@@ -71,8 +71,18 @@ exports.deleteEvent = async (req, res, next) => {
 
 exports.deleteMany = async (req, res, next) => {
   try {
-    const deleteMany = await Event.deleteMany(req.body);
+    await Event.deleteMany(req.body);
     return res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.searchEvent = async (req, res, next) => {
+  const { eventName } = req.params;
+  try {
+    const foundEvent = await Event.find({ name: eventName });
+    return res.json(foundEvent);
   } catch (error) {
     next(error);
   }
